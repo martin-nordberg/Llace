@@ -341,6 +341,7 @@ infixBindingPower.set(LlaceTokenType.LESS_THAN, new BindingPower(190, 200, Llace
 infixBindingPower.set(LlaceTokenType.LESS_THAN_OR_EQUALS, new BindingPower(190, 200, LlaceBinaryOperator.LessThanOrEquals))
 
 infixBindingPower.set(LlaceTokenType.IN, new BindingPower(210, 220, LlaceBinaryOperator.In))
+infixBindingPower.set(LlaceTokenType.IS, new BindingPower(210, 220, LlaceBinaryOperator.Is))
 infixBindingPower.set(LlaceTokenType.MATCHES, new BindingPower(210, 220, LlaceBinaryOperator.Match))
 infixBindingPower.set(LlaceTokenType.NOT_MATCHES, new BindingPower(210, 220, LlaceBinaryOperator.NotMatch))
 

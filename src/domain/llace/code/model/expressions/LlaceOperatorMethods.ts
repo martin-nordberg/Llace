@@ -40,6 +40,8 @@ export function textOfBinaryOperator(operator: LlaceBinaryOperator) {
             return " ?: "
         case LlaceBinaryOperator.IntersectLowPrecedence:
             return " && "
+        case LlaceBinaryOperator.Is:
+            return " is "
         case LlaceBinaryOperator.LessThan:
             return " < "
         case LlaceBinaryOperator.LessThanOrEquals:

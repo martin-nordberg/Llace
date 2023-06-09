@@ -58,7 +58,7 @@ describe('Bootstrap', () => {
         const tsCode = tsOutput.getOutput()
 
         const outPath = tsSrcRoot + tsModule.path.join("/") + ".tsgen"
-        fs.writeFileSync(outPath, tsCode)
+        // fs.writeFileSync(outPath, tsCode)
 
     }
 

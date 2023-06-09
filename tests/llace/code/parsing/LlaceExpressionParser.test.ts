@@ -73,6 +73,8 @@ describe('Parser', () => {
         expressions.set("1..9", "(.. (intliteral 1) (intliteral 9))")
         expressions.set("x in 1..9", "(in (identifier x) (.. (intliteral 1) (intliteral 9)))")
 
+        expressions.set("x is Widget", "(is (identifier x) (identifier Widget))")
+
         for (let code of expressions.keys()) {
             const fileName = `[[${code}]]`
 

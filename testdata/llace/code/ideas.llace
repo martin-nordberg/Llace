@@ -3,7 +3,15 @@
 x when {
     _: true -> "Yes",
     _: false -> "No"
-}
+},
+
+"Yes" if x else
+"No",
+
+"Green" if x is LiftOff else
+"Yellow" if x is Countdown else
+"Red" if x is Scrub,
+
 
 # Examples of type aliases
 module example/TypeAliases
