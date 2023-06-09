@@ -1,0 +1,34 @@
+
+Lists: module & (
+
+    // A generic (function) type
+    StringList: List(item: String),
+
+    namespace: example,
+
+    // Integer list
+    IntList: type & Integer[;],
+
+    PointList: type & (x: Double, y: Double)[;],
+
+    // A longer example
+    VectorArray: type & (
+
+        // x dimension magnitude
+        x: Double,
+
+        // y-dimension magnitude
+        y: Double,
+
+        // z-dimension magnitude
+        z: Double
+
+    )[;],
+
+    // A nested example
+    Primary: type & (first: Integer, nested: String[;]),
+
+    // A generic (function) type
+    StringList: List(item: String)
+
+)

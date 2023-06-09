@@ -1,0 +1,28 @@
+
+Sets: module & (
+
+    namespace: example,
+
+    // Integer array
+    IntSet: type & Integer{},
+
+    PointSet: type & (x: Double, y: Double){},
+
+    // A longer example
+    VectorSet: type & (
+
+        // x dimension magnitude
+        x: Double,
+
+        // y-dimension magnitude`;
+        y: Double,
+
+        // z-dimension magnitude`;
+        z: Double
+
+    ){},
+
+    // A nested example
+    Primary: type & (first: Integer, nested: String{})
+
+)

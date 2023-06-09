@@ -1,0 +1,53 @@
+
+Records: module & (
+
+    namespace: example,
+
+    // Empty record type
+    Unit: type & (),
+
+    Point: type & (x: Double, y: Double),
+
+    // A longer example
+    Vector: type & (
+
+        // x dimension magnitude
+        x: Double,
+
+        // y-dimension magnitude
+        y: Double,
+
+        // z-dimension magnitude
+        z: Double
+
+    ),
+
+    // A value example
+    myVector: (
+
+        // x dimension magnitude
+        x: Double = 7,
+
+        // y-dimension magnitude
+        y: Double = 8,
+
+        // z-dimension magnitude
+        z: Double ?: 0
+
+    ),
+
+    // Unit type
+    Unit: type & (),
+
+    // A nested example
+    Primary: type & (
+
+        // an example array field
+        first: Integer[] ?: [1, 2, 3],
+
+        // an example sub-object
+        nested: (a: String, b: String)
+
+    )
+
+)

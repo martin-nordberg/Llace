@@ -1,0 +1,24 @@
+
+
+x when {
+    _: true -> "Yes",
+    _: false -> "No"
+}
+
+# Examples of type aliases
+module example/TypeAliases
+
+export {
+    FirstName
+}
+
+# String containing a first name
+type FirstName is string &
+    value.length >= 2 &
+    value.length <= 50 &
+    value =~ /^[A-Za-z.' -]+$/
+
+# String containing a last name
+type LastName is string &
+    _.length in 2..80 &
+    _ =~ /^[A-Za-z.' -]+$/

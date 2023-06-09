@@ -1,0 +1,29 @@
+
+// Examples of array types.
+Arrays: module & (
+
+    namespace: example,
+
+    // Integer array
+    IntArray: type & Integer[],
+
+    PointList: type & (x: Double, y: Double)[],
+
+    // A longer example
+    VectorArray: type & (
+
+        // x dimension magnitude
+        x: Double,
+
+        // y-dimension magnitude
+        y: Double,
+
+        // z-dimension magnitude (optional)
+        z: Double?
+
+    )[][]{},
+
+    // A nested example
+    Primary: type & (first: Integer, nested: String[])
+
+)

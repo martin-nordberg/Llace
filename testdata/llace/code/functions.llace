@@ -1,0 +1,25 @@
+
+// Some sample function types
+Functions: module & (
+
+    namespace: example,
+
+    // Integer function
+    intFn: type & (x: Integer) -> Integer = (
+        a: 3 * x * x,
+        b: 7 * x,
+        q: ` a string by golly
+           ` and it has multiple lines
+        ,
+        result: a + b + 33
+    ),
+
+    magnitude: type & (x: Double, y: Double) -> Double,
+
+    // More complex
+    getFullName: type & (first-name: String, last-name: String) -> (full-name: String),
+
+    // Mixed
+    distance: type & (points: (x: Integer, y: Integer?)[]) -> Double
+
+)

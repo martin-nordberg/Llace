@@ -1,0 +1,33 @@
+
+// # Identifiers and qualified identifiers in Llace code.
+//
+// (C) Copyright 2023 Martin E. Nordberg III
+// Apache 2.0 License
+//
+LlaceIdentifiers: module & (
+
+    namespace: domain.llace.code.model.core,
+
+    imports: [domain.llace.code.util.LlaceOrigin.LlaceOrigin],
+
+    // Variant type representing an optional identifier.
+    LlaceOptIdentifier: type & LlaceNoIdentifier | LlaceIdentifier,
+
+    // A single name identifier.
+    LlaceIdentifier: type & (origin: LlaceOrigin, text: String),
+
+    // Null object implementation when an optional identifier is not present.
+    LlaceNoIdentifier: type & (),
+
+    // Sequence of identifiers connected by periods.
+    LlaceQualifiedIdentifier: type & (
+
+        // The individual identifiers making up the qualified identifier.
+        entries: LlaceIdentifier[],
+
+        // The origin of the identifier.
+        origin: LlaceOrigin
+
+    )
+
+)

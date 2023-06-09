@@ -1,0 +1,28 @@
+
+// # Data types related to token origins.
+//
+// (C) Copyright 2023 Martin E. Nordberg III
+// Apache 2.0 License
+//
+LlaceOrigin: module & (
+
+    namespace: domain.llace.code.util,
+
+    // A record of where a parsed item originated.
+    LlaceOrigin: type & (
+
+        // The name of the source file.
+        fileName: string,
+
+        // The line in the file (1-based).
+        line: number,
+
+        // The column in the file (1-based).
+        column: number,
+
+        // The length of the token.
+        length: number
+
+    )
+
+)

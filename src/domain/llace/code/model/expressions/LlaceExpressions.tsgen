@@ -1,0 +1,744 @@
+// # Identifiers and qualified identifiers in Llace code.
+//
+// (C) Copyright 2023 Martin E. Nordberg III
+// Apache 2.0 License
+//
+
+import {LlaceOptDocumentation} from "../core/LlaceDocumentation"
+import {LlaceType} from "../types/LlaceTypes"
+import {LlaceOrigin} from "../../util/LlaceOrigin"
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// One field key/value pair in a record literal.
+export const LlaceRecordField$Tag = {
+
+    // A field with no type or value
+    LlaceKeyAsValueRecordField: 0,
+
+    // A record field with type but no value TODO: should this exist?
+    LlaceTypeOnlyRecordField: 1,
+
+    // A record field with value but no type
+    LlaceValueOnlyRecordField: 2,
+
+    // A record field with both type and value
+    LlaceTypedValueRecordField: 3,
+
+    // A record field that is a type declaration
+    LlaceTypeAliasRecordField: 4,
+
+} as const
+
+export type LlaceRecordField$Tag = typeof LlaceRecordField$Tag[keyof typeof LlaceRecordField$Tag]
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// One field key/value pair in a record literal.
+export abstract class LlaceRecordField {
+
+    readonly LlaceRecordField$Tag: LlaceRecordField$Tag
+    readonly origin: LlaceOrigin
+    readonly documentation: LlaceOptDocumentation
+    readonly key: LlaceIdentifierExpr
+
+    protected constructor(
+        LlaceRecordField$Tag: LlaceRecordField$Tag,
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        key: LlaceIdentifierExpr,
+    ) {
+        this.LlaceRecordField$Tag = LlaceRecordField$Tag
+        this.origin = origin
+        this.documentation = documentation
+        this.key = key
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A field with no type or value
+export class LlaceKeyAsValueRecordField extends LlaceRecordField {
+
+    constructor(
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        key: LlaceIdentifierExpr,
+    ) {
+        super(
+            LlaceRecordField$Tag.LlaceKeyAsValueRecordField,
+            origin,
+            documentation,
+            key,
+        )
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A record field with type but no value TODO: should this exist?
+export class LlaceTypeOnlyRecordField extends LlaceRecordField {
+
+    readonly type: LlaceType
+
+    constructor(
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        key: LlaceIdentifierExpr,
+        type: LlaceType,
+    ) {
+        super(
+            LlaceRecordField$Tag.LlaceTypeOnlyRecordField,
+            origin,
+            documentation,
+            key,
+        )
+        this.type = type
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A record field with value but no type
+export class LlaceValueOnlyRecordField extends LlaceRecordField {
+
+    readonly value: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        key: LlaceIdentifierExpr,
+        value: LlaceExpression,
+    ) {
+        super(
+            LlaceRecordField$Tag.LlaceValueOnlyRecordField,
+            origin,
+            documentation,
+            key,
+        )
+        this.value = value
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A record field with both type and value
+export class LlaceTypedValueRecordField extends LlaceRecordField {
+
+    readonly type: LlaceType
+    readonly value: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        key: LlaceIdentifierExpr,
+        type: LlaceType,
+        value: LlaceExpression,
+    ) {
+        super(
+            LlaceRecordField$Tag.LlaceTypedValueRecordField,
+            origin,
+            documentation,
+            key,
+        )
+        this.type = type
+        this.value = value
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A record field that is a type declaration
+export class LlaceTypeAliasRecordField extends LlaceRecordField {
+
+    readonly type: LlaceType
+
+    constructor(
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        key: LlaceIdentifierExpr,
+        type: LlaceType,
+    ) {
+        super(
+            LlaceRecordField$Tag.LlaceTypeAliasRecordField,
+            origin,
+            documentation,
+            key,
+        )
+        this.type = type
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// Hierarchy of expression types
+export const LlaceExpression$Tag = {
+
+    // lhs '+' rhs
+    LlaceAdditionExpr: 0,
+
+    // '[' x, y, z ']'
+    LlaceArrayLiteralExpr: 1,
+
+    // 'x'
+    LlaceCharLiteralExpr: 2,
+
+    // '2023-01-01'
+    LlaceDateLiteralExpr: 3,
+
+    // '2023-01-01T12:00:00Z'
+    LlaceDateTimeLiteralExpr: 4,
+
+    // lhs '/' rhs
+    LlaceDivisionExpr: 5,
+
+    // lhs '==' rhs
+    LlaceEqualityComparisonExpr: 6,
+
+    // lhs '.' fieldName
+    LlaceFieldRefExpr: 7,
+
+    // lhs '>' rhs
+    LlaceGreaterThanComparisonExpr: 8,
+
+    // lhs '>=' rhs
+    LlaceGreaterThanOrEqualsComparisonExpr: 9,
+
+    // name
+    LlaceIdentifierExpr: 10,
+
+    // 123
+    LlaceIntegerLiteralExpr: 11,
+
+    // lhs '<' rhs
+    LlaceLessThanComparisonExpr: 12,
+
+    // lhs '<=' rhs
+    LlaceLessThanOrEqualsComparisonExpr: 13,
+
+    // lhs '*' rhs
+    LlaceMultiplicationExpr: 14,
+
+    // '(' inner ')'
+    LlaceParenthesizedExpr: 15,
+
+    // '(' key1: type1 = value1 ',' key2: type2 = value2 ')'
+    LlaceRecordLiteralExpr: 16,
+
+    // "abc"
+    LlaceStringLiteralExpr: 17,
+
+    // lhs '-' rhs
+    LlaceSubtractionExpr: 18,
+
+    // '-' rhs
+    LlaceUnaryMinusExpr: 19,
+
+    // '12345678-1234-1234-1234-1234567890AB'
+    LlaceUuidLiteralExpr: 20,
+
+} as const
+
+export type LlaceExpression$Tag = typeof LlaceExpression$Tag[keyof typeof LlaceExpression$Tag]
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// Hierarchy of expression types
+export abstract class LlaceExpression {
+
+    readonly LlaceExpression$Tag: LlaceExpression$Tag
+    readonly origin: LlaceOrigin
+
+    protected constructor(
+        LlaceExpression$Tag: LlaceExpression$Tag,
+        origin: LlaceOrigin,
+    ) {
+        this.LlaceExpression$Tag = LlaceExpression$Tag
+        this.origin = origin
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '+' rhs
+export class LlaceAdditionExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceAdditionExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '[' x, y, z ']'
+export class LlaceArrayLiteralExpr extends LlaceExpression {
+
+    readonly elements: LlaceExpression[]
+
+    constructor(
+        origin: LlaceOrigin,
+        elements: LlaceExpression[],
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceArrayLiteralExpr,
+            origin,
+        )
+        this.elements = elements
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// 'x'
+export class LlaceCharLiteralExpr extends LlaceExpression {
+
+    readonly text: string
+
+    constructor(
+        origin: LlaceOrigin,
+        text: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceCharLiteralExpr,
+            origin,
+        )
+        this.text = text
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '2023-01-01'
+export class LlaceDateLiteralExpr extends LlaceExpression {
+
+    readonly text: string
+
+    constructor(
+        origin: LlaceOrigin,
+        text: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceDateLiteralExpr,
+            origin,
+        )
+        this.text = text
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '2023-01-01T12:00:00Z'
+export class LlaceDateTimeLiteralExpr extends LlaceExpression {
+
+    readonly text: string
+
+    constructor(
+        origin: LlaceOrigin,
+        text: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceDateTimeLiteralExpr,
+            origin,
+        )
+        this.text = text
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '/' rhs
+export class LlaceDivisionExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceDivisionExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '==' rhs
+export class LlaceEqualityComparisonExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceEqualityComparisonExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '.' fieldName
+export class LlaceFieldRefExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly fieldName: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        fieldName: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceFieldRefExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.fieldName = fieldName
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '>' rhs
+export class LlaceGreaterThanComparisonExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceGreaterThanComparisonExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '>=' rhs
+export class LlaceGreaterThanOrEqualsComparisonExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceGreaterThanOrEqualsComparisonExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// name
+export class LlaceIdentifierExpr extends LlaceExpression {
+
+    readonly name: string
+
+    constructor(
+        origin: LlaceOrigin,
+        name: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceIdentifierExpr,
+            origin,
+        )
+        this.name = name
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// 123
+export class LlaceIntegerLiteralExpr extends LlaceExpression {
+
+    readonly text: string
+
+    constructor(
+        origin: LlaceOrigin,
+        text: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceIntegerLiteralExpr,
+            origin,
+        )
+        this.text = text
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '<' rhs
+export class LlaceLessThanComparisonExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceLessThanComparisonExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '<=' rhs
+export class LlaceLessThanOrEqualsComparisonExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceLessThanOrEqualsComparisonExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '*' rhs
+export class LlaceMultiplicationExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceMultiplicationExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '(' inner ')'
+export class LlaceParenthesizedExpr extends LlaceExpression {
+
+    readonly inner: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        inner: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceParenthesizedExpr,
+            origin,
+        )
+        this.inner = inner
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '(' key1: type1 = value1 ',' key2: type2 = value2 ')'
+export class LlaceRecordLiteralExpr extends LlaceExpression {
+
+    readonly fields: LlaceRecordField[]
+
+    constructor(
+        origin: LlaceOrigin,
+        fields: LlaceRecordField[],
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceRecordLiteralExpr,
+            origin,
+        )
+        this.fields = fields
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// "abc"
+export class LlaceStringLiteralExpr extends LlaceExpression {
+
+    readonly text: string
+
+    constructor(
+        origin: LlaceOrigin,
+        text: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceStringLiteralExpr,
+            origin,
+        )
+        this.text = text
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// lhs '-' rhs
+export class LlaceSubtractionExpr extends LlaceExpression {
+
+    readonly lhs: LlaceExpression
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceSubtractionExpr,
+            origin,
+        )
+        this.lhs = lhs
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '-' rhs
+export class LlaceUnaryMinusExpr extends LlaceExpression {
+
+    readonly rhs: LlaceExpression
+
+    constructor(
+        origin: LlaceOrigin,
+        rhs: LlaceExpression,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceUnaryMinusExpr,
+            origin,
+        )
+        this.rhs = rhs
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// '12345678-1234-1234-1234-1234567890AB'
+export class LlaceUuidLiteralExpr extends LlaceExpression {
+
+    readonly text: string
+
+    constructor(
+        origin: LlaceOrigin,
+        text: string,
+    ) {
+        super(
+            LlaceExpression$Tag.LlaceUuidLiteralExpr,
+            origin,
+        )
+        this.text = text
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------

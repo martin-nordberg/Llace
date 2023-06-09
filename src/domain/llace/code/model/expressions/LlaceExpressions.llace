@@ -1,0 +1,197 @@
+
+// # Identifiers and qualified identifiers in Llace code.
+//
+// (C) Copyright 2023 Martin E. Nordberg III
+// Apache 2.0 License
+//
+LlaceExpressions: module & (
+
+    namespace: domain.llace.code.model.expressions,
+
+    imports: [domain.llace.code.model.core.LlaceDocumentation.LlaceOptDocumentation, domain.llace.code.util.LlaceOrigin.LlaceOrigin],
+
+    // The operator type of a binary operator expression.
+    LlaceBinaryOperators: (
+        Add: 0,  // +
+        Divide: 1,  // /
+        Equality: 2,  // ==
+        FieldReference: 3,  // .
+        FunctionCall: 4,  // ->
+        GreaterThan: 5,  // >
+        GreaterThanOrEquals: 6,  // >=
+        Intersection: 7,  // &
+        LessThan: 8,  // <
+        LessThanOrEquals: 9,  // <=
+        Multiply: 10,  // *
+        Subtract: 11,  // -
+        Union: 12  // |
+    ),
+
+    // The operator type of a binary operator expression.
+    LlaceBinaryOperator: Integer &&
+        BinaryOperators.Add
+        | BinaryOperators.Divide
+        | BinaryOperators.Equality
+        | BinaryOperators.FieldReference
+        | BinaryOperators.FunctionCall
+        | BinaryOperators.GreaterThan
+        | BinaryOperators.GreaterThanOrEquals
+        | BinaryOperators.Intersection
+        | BinaryOperators.LessThan
+        | BinaryOperators.LessThanOrEquals
+        | BinaryOperators.Multiply
+        | BinaryOperators.Subtract
+        | BinaryOperators.Union,
+
+    // Unary operators
+    LlaceUnaryOperators: (
+        Negation: 0  // -
+    ),
+
+    // Unary operators
+    LlaceUnaryOperator: Integer && BinaryOperators.Negation,
+
+    // Hierarchy of expression types
+    LlaceExpression: type &&
+        LlaceArrayLiteralExpr
+        | LlaceArrayTypeExpr
+        | LlaceBinaryOperationExpr
+        | LlaceCharLiteralExpr
+        | LlaceDateLiteralExpr
+        | LlaceDateTimeLiteralExpr
+        | LlaceIdentifierExpr
+        | LlaceIntegerLiteralExpr
+        | LlaceListTypeExpr
+        | LlaceMapTypeExpr
+        | LlaceOptionalExpr
+        | LlaceParenthesizedExpr
+        | LlaceRecordLiteralExpr
+        | LlaceSetTypeExpr
+        | LlaceStringLiteralExpr
+        | LlaceUnaryOperationExpr
+        | LlaceUuidLiteralExpr,
+
+    // '[' x ',' y ',' z ']'
+    LlaceArrayLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        elements: LlaceExpression[]
+    ),
+
+    // itemType '[' ']'
+    LlaceArrayTypeExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        itemType: LlaceExpression
+    ),
+
+    // lhs op rhs
+    LlaceBinaryOperationExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        operator: LlaceBinaryOperator,
+        lhs: LlaceExpression,
+        rhs: LlaceExpression
+    ),
+
+    // 'x'
+    LlaceCharLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        text: string
+    ),
+
+    // '2023-01-01'
+    LlaceDateLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        text: string
+    ),
+
+    // '2023-01-01T12:00:00Z'
+    LlaceDateTimeLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        text: string
+    ),
+
+    // name
+    LlaceIdentifierExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        name: string
+    ),
+
+    // 123
+    LlaceIntegerLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        text: string
+    ),
+
+    // itemType '[' ';' ']'
+    LlaceListTypeExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        itemType: LlaceExpression
+    ),
+
+    // itemType '{' keyType '}'
+    LlaceMapTypeExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        itemType: LlaceExpression,
+        keyType: LlaceExpression
+    ),
+
+    // X '?'
+    LlaceOptionalExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        lhs: LlaceExpression
+    ),
+
+    // '(' inner ')'
+    LlaceParenthesizedExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        inner: LlaceExpression
+    ),
+
+    // '(' key1: type1 = value1 ',' key2: type2 = value2 ')'
+    LlaceRecordLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        fields: LlaceRecordField[]
+    ),
+
+    // itemType '{' '}'
+    LlaceSetTypeExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        itemType: LlaceExpression
+    ),
+
+    // "abc"
+    LlaceStringLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        text: string
+    ),
+
+    // '-' rhs
+    LlaceUnaryOperationExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        operator: LlaceUnaryOperator,
+        rhs: LlaceExpression
+    ),
+
+    // '12345678-1234-1234-1234-1234567890AB'
+    LlaceUuidLiteralExpr: type && (
+        origin: LlaceOrigin,
+        documentation: LlaceOptDocumentation,
+        text: string
+    )
+
+)

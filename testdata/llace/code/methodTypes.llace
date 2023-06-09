@@ -1,0 +1,18 @@
+
+// Some sample function types
+Functions: module & (
+
+    namespace: example,
+
+    // Integer method
+    intMethod: type & Example.(x: Integer) -> Integer,
+
+    magnitude: type & Vector.(x: Double, y: Double) -> Double,
+
+    // More complex
+    fullName: type & Person.(first-name: String, last-name: String) -> (full-name: String),
+
+    // Mixed
+    distance: type & Polygon.(points: (x: Integer, y: Integer?)[]) -> Double
+
+)

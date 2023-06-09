@@ -1,0 +1,334 @@
+// # Data types related to Llace token scanning.
+//
+// (C) Copyright 2023 Martin E. Nordberg III
+// Apache 2.0 License
+//
+
+import {LlaceOrigin} from "../util/LlaceOrigin"
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// An enumeration of Llace token types.
+export const LlaceTokenType = {
+
+    // Artificial indicator of end of file
+    EOF: 0,
+
+    // "&"
+    AMPERSAND: 1,
+
+    // "*"
+    ASTERISK: 2,
+
+    // ":"
+    COLON: 3,
+
+    // ","
+    COMMA: 4,
+
+    // "-"
+    DASH: 5,
+
+    // "."
+    DOT: 6,
+
+    // "="
+    EQUALS: 7,
+
+    // "=="
+    EQUALS_EQUALS: 8,
+
+    // '>'
+    GREATER_THAN: 9,
+
+    // '>='
+    GREATER_THAN_OR_EQUALS: 10,
+
+    // "{"
+    LEFT_BRACE: 11,
+
+    // "["
+    LEFT_BRACKET: 12,
+
+    // "("
+    LEFT_PARENTHESIS: 13,
+
+    // '<'
+    LESS_THAN: 14,
+
+    // '<='
+    LESS_THAN_OR_EQUALS: 15,
+
+    // "+"
+    PLUS: 16,
+
+    // "?"
+    QUESTION_MARK: 17,
+
+    // "->"
+    RIGHT_ARROW: 18,
+
+    // "}"
+    RIGHT_BRACE: 19,
+
+    // "]"
+    RIGHT_BRACKET: 20,
+
+    // ")"
+    RIGHT_PARENTHESIS: 21,
+
+    // ";"
+    SEMICOLON: 22,
+
+    // "/"
+    SLASH: 23,
+
+    // "|"
+    VERTICAL_BAR: 24,
+
+    // Alphanumeric name
+    IDENTIFIER: 25,
+
+    // "[integer literal]"
+    INTEGER_LITERAL: 26,
+
+    // "[string literal]"
+    STRING_LITERAL: 27,
+
+    // "[character literal]"
+    CHAR_LITERAL: 28,
+
+    // "[date literal]"
+    DATE_LITERAL: 29,
+
+    // "[date-time literal]"
+    DATETIME_LITERAL: 30,
+
+    // "[IP address V4 literal]"
+    IP_ADDRESS_V4: 31,
+
+    // "[IP address V6 literal]"
+    IP_ADDRESS_V6: 32,
+
+    // "[UUID literal]"
+    UUID_LITERAL: 33,
+
+    // ` Back-ticked
+    DOCUMENTATION: 34,
+
+    // "[error - literal extends past end of line]"
+    UNCLOSED_LITERAL: 35,
+
+    // "[error - string extends past end of line]"
+    UNCLOSED_STRING: 36,
+
+    // "[error - unrecognized character]"
+    UNRECOGNIZED_CHAR: 37,
+
+    // "[error - unrecognized literal]"
+    UNRECOGNIZED_LITERAL: 38,
+
+} as const
+
+export type LlaceTokenType = typeof LlaceTokenType[keyof typeof LlaceTokenType]
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// An enumeration of Llace keywords.
+export const LlaceKeyword = {
+
+    // "and"
+    AND: 0,
+
+    // "as"
+    AS: 1,
+
+    // "export"
+    EXPORT: 2,
+
+    // "import"
+    IMPORT: 3,
+
+    // "is"
+    IS: 4,
+
+    // "module"
+    MODULE: 5,
+
+    // "of"
+    OF: 6,
+
+    // "option"
+    OPTION: 7,
+
+    // "or"
+    OR: 8,
+
+    // "satisfying"
+    SATISFYING: 9,
+
+    // "type"
+    TYPE: 10,
+
+} as const
+
+export type LlaceKeyword = typeof LlaceKeyword[keyof typeof LlaceKeyword]
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// An abstract token occurring at line [line] and column [column] (both 1-based) in its source file.
+export const LlaceToken$Tag = {
+
+    // A token that always has the same text for given [type].
+    LlacePunctuationToken: 0,
+
+    // A token for an unrecognizable character.
+    LlaceUnrecognizableToken: 1,
+
+    // A token that has differing [text] from one instance of its [type] to the next but is not an identifier.
+    LlaceNonIdentifierToken: 2,
+
+    // A non-keyword identifier token with given [text].
+    LlaceNonKeywordToken: 3,
+
+    // A [keyword] token.
+    LlaceKeywordToken: 4,
+
+} as const
+
+export type LlaceToken$Tag = typeof LlaceToken$Tag[keyof typeof LlaceToken$Tag]
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// An abstract token occurring at line [line] and column [column] (both 1-based) in its source file.
+export abstract class LlaceToken {
+
+    readonly LlaceToken$Tag: LlaceToken$Tag
+    readonly type: LlaceTokenType
+    readonly text: string
+    readonly origin: LlaceOrigin
+
+    protected constructor(
+        LlaceToken$Tag: LlaceToken$Tag,
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+    ) {
+        this.LlaceToken$Tag = LlaceToken$Tag
+        this.type = type
+        this.text = text
+        this.origin = origin
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A token that always has the same text for given [type].
+export class LlacePunctuationToken extends LlaceToken {
+
+    constructor(
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+    ) {
+        super(
+            LlaceToken$Tag.LlacePunctuationToken,
+            type,
+            text,
+            origin,
+        )
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A token for an unrecognizable character.
+export class LlaceUnrecognizableToken extends LlaceToken {
+
+    constructor(
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+    ) {
+        super(
+            LlaceToken$Tag.LlaceUnrecognizableToken,
+            type,
+            text,
+            origin,
+        )
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A token that has differing [text] from one instance of its [type] to the next but is not an identifier.
+export class LlaceNonIdentifierToken extends LlaceToken {
+
+    constructor(
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+    ) {
+        super(
+            LlaceToken$Tag.LlaceNonIdentifierToken,
+            type,
+            text,
+            origin,
+        )
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A non-keyword identifier token with given [text].
+export class LlaceNonKeywordToken extends LlaceToken {
+
+    constructor(
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+    ) {
+        super(
+            LlaceToken$Tag.LlaceNonKeywordToken,
+            type,
+            text,
+            origin,
+        )
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// A [keyword] token.
+export class LlaceKeywordToken extends LlaceToken {
+
+    readonly keyword: LlaceKeyword
+
+    constructor(
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+        keyword: LlaceKeyword,
+    ) {
+        super(
+            LlaceToken$Tag.LlaceKeywordToken,
+            type,
+            text,
+            origin,
+        )
+        this.keyword = keyword
+        Object.freeze(this)
+    }
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------

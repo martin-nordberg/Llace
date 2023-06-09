@@ -1,0 +1,106 @@
+
+// # Data types related to Llace token scanning.
+//
+// (C) Copyright 2023 Martin E. Nordberg III
+// Apache 2.0 License
+//
+LlaceTokens: module & (
+
+    namespace: domain.llace.code.scanning,
+
+    imports: [domain.llace.code.util.LlaceOrigin.LlaceOrigin],
+
+    // An enumeration of Llace token types.
+    LlaceTokenTypes: (
+        EOF: 0,  // Artificial indicator of end of file
+        AMPERSAND: 1,  // &
+        ASTERISK: 2,  // *
+        COLON: 3,  // :
+        COMMA: 4,  // ,
+        DASH: 5,  // -
+        DOT: 6,  // .
+        DASH: 7,  // -
+        EQUALS: 8,  // =
+        EQUALS_EQUALS: 9,  // ==
+        EXCLAMATION: 10,  // !
+        GREATER_THAN: 11,  // >
+        GREATER_THAN_OR_EQUALS: 12,  // >=
+        LEFT_BRACE: 13,  // {
+        LEFT_BRACKET: 14,  // [
+        LEFT_PARENTHESIS: 15,  // (
+        LESS_THAN: 16,  // <
+        LESS_THAN_OR_EQUALS: 17,  // <=
+        PLUS: 18,  // +
+        QUESTION_MARK: 19,  // ?
+        RIGHT_ARROW: 20  // ->
+    ),
+
+    // An enumeration of Llace token types.
+    LlaceTokenType: Integer &&
+        LlaceTokenTypes.EOF
+        | LlaceTokenTypes.AMPERSAND
+        | LlaceTokenTypes.ASTERISK
+        | LlaceTokenTypes.COLON
+        | LlaceTokenTypes.COMMA
+        | LlaceTokenTypes.DASH
+        | LlaceTokenTypes.DOT
+        | LlaceTokenTypes.DASH
+        | LlaceTokenTypes.EQUALS
+        | LlaceTokenTypes.EQUALS_EQUALS
+        | LlaceTokenTypes.EXCLAMATION
+        | LlaceTokenTypes.GREATER_THAN
+        | LlaceTokenTypes.GREATER_THAN_OR_EQUALS
+        | LlaceTokenTypes.LEFT_BRACE
+        | LlaceTokenTypes.LEFT_BRACKET
+        | LlaceTokenTypes.LEFT_PARENTHESIS
+        | LlaceTokenTypes.LESS_THAN
+        | LlaceTokenTypes.LESS_THAN_OR_EQUALS
+        | LlaceTokenTypes.PLUS
+        | LlaceTokenTypes.QUESTION_MARK
+        | LlaceTokenTypes.RIGHT_ARROW,
+
+    // An abstract token occurring at line [line] and column [column] (both 1-based) in its source file.
+    LlaceToken: type &&
+        LlacePunctuationToken
+        | LlaceUnrecognizableToken
+        | LlaceNonIdentifierToken
+        | LlaceNonKeywordToken
+        | LlaceKeywordToken,
+
+    // A token that always has the same text for given [type].`;
+    LlacePunctuationToken: type & (
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin
+    ),
+
+    // A token for an unrecognizable character.`;
+    LlaceUnrecognizableToken: type & (
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin
+    ),
+
+    // A token that has differing [text] from one instance of its [type] to the next but is not an identifier.`;
+    LlaceNonIdentifierToken: type & (
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin
+    ),
+
+    // A non-keyword identifier token with given [text].`;
+    LlaceNonKeywordToken: type & (
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin
+    ),
+
+    // A [keyword] token.`;
+    LlaceKeywordToken: type & (
+        type: LlaceTokenType,
+        text: string,
+        origin: LlaceOrigin,
+        keyword: LlaceKeyword
+    )
+
+)

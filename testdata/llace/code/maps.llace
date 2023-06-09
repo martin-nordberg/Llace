@@ -1,0 +1,30 @@
+
+// Sample map types.
+// This is the module documentation.
+Maps: module & (
+
+    namespace: example,
+
+    // Integer map
+    IntMap: type & Integer{String},
+
+    PointMap: type & (x: Double, y: Double){Integer},
+
+    // A longer example
+    NamedVectors: type & (
+
+        // x dimension magnitude
+        x: Double,
+
+        // y-dimension magnitude
+        y: Double,
+
+        // z-dimension magnitude
+        z: Double
+
+    ){String},
+
+    // A nested example
+    Primary: type & (first: Integer, nested: String{String})
+
+)

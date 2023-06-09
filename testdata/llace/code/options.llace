@@ -1,0 +1,36 @@
+
+Options: module & (
+
+    namespace: example,
+
+    // Three simple variants
+    E: type &&
+        A
+        | B
+        | C,
+
+    T: type && X | Y,
+
+    // Constants for an enum
+    Items: (
+        One: 1,  // First
+        Two: 2,  // Second
+        Three: 3,  // Third
+        Four: 4  // Fourth
+    ),
+
+    // Four variants
+    // spread over multiple lines
+    Many: type &&
+        Items.One  // First
+        | Items.Two  // Second
+        | Items.Three  // Third
+        | Items.Four,  // Fourth
+
+    // Algebraic
+    Shape: type && Circle: (radius: Double) | Square: (side: Double) | Rectangle: (length: Double, width: Double),
+
+    // With references
+    Employee: type && Exempt: SalaryInfo | NonExempt: HourlyPayInfo
+
+)
